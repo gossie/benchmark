@@ -18,8 +18,12 @@ public class Task<T> {
 	public String getName() {
 		return name;
 	}
+	
+	public T getData() {
+		return dataSupplier.get();
+	}
 
-	public void perform() {
-		test.accept(dataSupplier.get());
+	public void perform(T data) {
+		test.accept(data);
 	}
 }

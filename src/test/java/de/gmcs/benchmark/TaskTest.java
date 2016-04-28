@@ -1,6 +1,7 @@
 package de.gmcs.benchmark;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -32,13 +33,20 @@ public class TaskTest {
 	public void testGetName() throws Exception {
 		assertThat(subject.getName(), is("task"));
 	}
+	
+	@Test
+	public void testGetData() {
+		Object value = new Object();
+		when(supplier.get()).thenReturn(value);
+		
+		assertThat(subject.getData(), is(sameInstance(value)));
+	}
 
 	@Test
 	public void testPerform() throws Exception {
 		Object value = new Object();
-		when(supplier.get()).thenReturn(value);
 		
-		subject.perform();
+		subject.perform(value);
 		
 		verify(consumer).accept(value);
 	}

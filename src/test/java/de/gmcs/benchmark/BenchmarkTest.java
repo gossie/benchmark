@@ -27,8 +27,11 @@ public class BenchmarkTest {
 	
 	@Test
 	public void testPerform() throws Exception {
-		Task<Object> task1 = createTask("task1");
-		Task<Object> task2 = createTask("task2");
+		Object data1 = new Object();
+		Object data2 = new Object();
+		
+		Task<Object> task1 = createTask("task1", data1);
+		Task<Object> task2 = createTask("task2", data2);
 		
 		List<Task<Object>> tasks = new ArrayList<>();
 		tasks.add(task1);
@@ -36,15 +39,16 @@ public class BenchmarkTest {
 		
 		subject.perform(tasks);
 		
-		verify(task1, times(75_000)).perform();
-		verify(task2, times(75_000)).perform();
+		verify(task1, times(75_000)).perform(data1);
+		verify(task2, times(75_000)).perform(data2);
 	}
 
 	
 	@SuppressWarnings("unchecked")
-	private Task<Object> createTask(String name) {
+	private Task<Object> createTask(String name, Object data) {
 		Task<Object> task = mock(Task.class);
 		when(task.getName()).thenReturn(name);
+		when(task.getData()).thenReturn(data);
 		
 		return task;
 	}
