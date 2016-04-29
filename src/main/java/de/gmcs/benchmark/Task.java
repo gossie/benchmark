@@ -23,7 +23,7 @@ public class Task<T> {
 		return dataSupplier.get();
 	}
 
-	public void perform(T data) {
+	public void execute(T data) {
 		test.accept(data);
 	}
 }

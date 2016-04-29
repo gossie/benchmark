@@ -43,11 +43,11 @@ public class TaskTest {
 	}
 
 	@Test
-	public void testPerform() throws Exception {
-		Object value = new Object();
-		
-		subject.perform(value);
-		
-		verify(consumer).accept(value);
-	}
+    	public void testExecute() throws Exception {
+    		Object value = new Object();
+    		
+    		subject.execute(value);
+    		
+    		verify(consumer).accept(value);
+    	}
 }
