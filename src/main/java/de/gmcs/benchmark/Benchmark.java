@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.gmcs.benchmark.options.Options;
 import de.gmcs.benchmark.result.ResultWriter;
+import de.gmcs.benchmark.time.StopWatch;
 
 public class Benchmark<T> {
 
@@ -22,7 +23,7 @@ public class Benchmark<T> {
         resultWriter.printBenchmarkStart();
 
         performWarmup(resultWriter, tasks);
-        tasks.forEach(t -> performBenchmark(resultWriter, t));
+        tasks.forEach(t -> performBenchmark(resultWriter, options.getStopWatch(), t));
 
         resultWriter.printBenchmarkEnd();
     }
@@ -35,14 +36,14 @@ public class Benchmark<T> {
         resultWriter.printWarmupEnd();
     }
 
-    private void performBenchmark(ResultWriter resultWriter, Task<T> task) {
+    private void performBenchmark(ResultWriter resultWriter, StopWatch stopWatch, Task<T> task) {
         resultWriter.printTaskStart(task.getName());
         T data = task.getData();
-        long start = System.currentTimeMillis();
+        stopWatch.start();
         for (int i = 0; i < LOOPSIZE; i++) {
             task.execute(data);
         }
-        long end = System.currentTimeMillis();
-        resultWriter.printTaskEnd(task.getName(), end - start);
+        long time = stopWatch.end();
+        resultWriter.printTaskEnd(task.getName(), time);
     }
 }

@@ -8,10 +8,12 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.gmcs.benchmark.options.Options;
-import de.gmcs.benchmark.result.SimpleResultWriter;
 import org.junit.Before;
 import org.junit.Test;
+
+import de.gmcs.benchmark.options.Options;
+import de.gmcs.benchmark.result.SimpleResultWriter;
+import de.gmcs.benchmark.time.MilliSecondStopWatch;
 
 public class BenchmarkTest {
 
@@ -21,6 +23,7 @@ public class BenchmarkTest {
     public void setUp() {
         Options options = mock(Options.class);
         when(options.getWriter()).thenReturn(mock(SimpleResultWriter.class));
+        when(options.getStopWatch()).thenReturn(mock(MilliSecondStopWatch.class));
 
         subject = new Benchmark<>(options);
     }

@@ -9,11 +9,14 @@ import static org.mockito.Mockito.verify;
 
 import java.io.Writer;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import de.gmcs.benchmark.result.HtmlResultWriter;
 import de.gmcs.benchmark.result.JsonResultWriter;
 import de.gmcs.benchmark.result.SimpleResultWriter;
-import org.junit.Before;
-import org.junit.Test;
+import de.gmcs.benchmark.time.MilliSecondStopWatch;
+import de.gmcs.benchmark.time.NanoSecondStopWatch;
 
 public class OptionsTest {
 
@@ -40,12 +43,21 @@ public class OptionsTest {
         assertThat(subject.withOutputFormat(OutputFormat.JSON).getWriter(), is(instanceOf(JsonResultWriter.class)));
     }
 
-    @SuppressWarnings("resource")
     @Test
     public void testWithWriter() throws Exception {
         Writer writer = mock(Writer.class);
         subject.withWriter(writer).getWriter().printBenchmarkStart();
 
         verify(writer).write(anyString());
+    }
+
+    @Test
+    public void testWithMeasuringUnit_milliseconds() throws Exception {
+        assertThat(subject.withMeasuringUnit(MeasuringUnit.MILLISECONDS).getStopWatch(), is(instanceOf(MilliSecondStopWatch.class)));
+    }
+
+    @Test
+    public void testWithMeasuringUnit_nanoseconds() throws Exception {
+        assertThat(subject.withMeasuringUnit(MeasuringUnit.NANOSECONDS).getStopWatch(), is(instanceOf(NanoSecondStopWatch.class)));
     }
 }

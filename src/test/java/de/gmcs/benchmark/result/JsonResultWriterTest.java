@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class JsonResultWriterTest {
 
     @InjectMocks
@@ -27,30 +25,24 @@ public class JsonResultWriterTest {
     @Test
     public void testPrintBenchmarkStart() throws Exception {
         subject.printBenchmarkStart();
-        String html =
-                "<html>\n<head>\n<title>Benchmark result</title>\n</head>\n<body>\n<table>\n<thead>\n<tr>\n<th>Task</th>\n<th>Time (ms)</th>\n</tr>\n</thead>\n<tbody>\n";
-
-        verify(writer).write(html);
+        verify(writer).write("{\"tasks\":[");
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintBenchmarkStart_ioException() throws Exception {
-        String html =
-                "<html>\n<head>\n<title>Benchmark result</title>\n</head>\n<body>\n<table>\n<thead>\n<tr>\n<th>Task</th>\n<th>Time (ms)</th>\n</tr>\n</thead>\n<tbody>\n";
-
-        doThrow(IOException.class).when(writer).write(html);
+        doThrow(IOException.class).when(writer).write("{\"tasks\":[");
         subject.printBenchmarkStart();
     }
 
     @Test
     public void testPrintBenchmarkEnd() throws Exception {
         subject.printBenchmarkEnd();
-        verify(writer).write("</tbody>\n</table>\n</body>\n</html>\n");
+        verify(writer).write("]}");
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintBenchmarkEnd_ioException() throws Exception {
-        doThrow(IOException.class).when(writer).write("</tbody>\n</table>\n</body>\n</html>\n");
+        doThrow(IOException.class).when(writer).write("]}");
         subject.printBenchmarkEnd();
     }
 
@@ -74,13 +66,15 @@ public class JsonResultWriterTest {
 
     @Test
     public void testPrintTaskEnd() throws Exception {
-        subject.printTaskEnd("task", 350L);
-        verify(writer).write("<tr>\n<td>task</td>\n<td>350</td>\n</tr>\n");
+        subject.printTaskEnd("task1", 351L);
+        subject.printTaskEnd("task2", 352L);
+        verify(writer).write("{\"name\":\"task1\",\"time\":351}");
+        verify(writer).write(",{\"name\":\"task2\",\"time\":352}");
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintTaskEnd_ioException() throws Exception {
-        doThrow(IOException.class).when(writer).write("<tr>\n<td>task</td>\n<td>350</td>\n</tr>\n");
+        doThrow(IOException.class).when(writer).write("{\"name\":\"task\",\"time\":350}");
         subject.printTaskEnd("task", 350L);
     }
 }
