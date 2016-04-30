@@ -35,7 +35,7 @@ public class TaskTest {
 	}
 	
 	@Test
-	public void testGetData() {
+	public void testGetData() throws Exception {
 		Object value = new Object();
 		when(supplier.get()).thenReturn(value);
 		
@@ -43,11 +43,11 @@ public class TaskTest {
 	}
 
 	@Test
-    	public void testExecute() throws Exception {
-    		Object value = new Object();
-    		
-    		subject.execute(value);
-    		
-    		verify(consumer).accept(value);
-    	}
+	public void testExecute() throws Exception {
+		Object value = new Object();
+		
+		subject.execute(value);
+		
+		verify(consumer).accept(value);
+	}
 }

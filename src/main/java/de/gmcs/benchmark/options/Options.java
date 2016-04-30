@@ -22,11 +22,15 @@ public class Options {
     private Writer writer;
     private OutputFormat outputFormat;
     private MeasuringUnit measuringUnit;
+    private int benchmarkLoopsize;
+    private int warmupLoopsize;
 
     public Options() {
         writer = new OutputStreamWriter(System.out);
         outputFormat = OutputFormat.NONE;
         measuringUnit = MeasuringUnit.MILLISECONDS;
+        benchmarkLoopsize = 50_000;
+        warmupLoopsize = -1;
 
         resultWriter.put(OutputFormat.NONE, () -> new SimpleResultWriter(writer));
         resultWriter.put(OutputFormat.HTML, () -> new HtmlResultWriter(writer));
@@ -51,11 +55,32 @@ public class Options {
         return this;
     }
 
+    public Options withBenchmarkLoopsize(int loopSize) {
+    	this.benchmarkLoopsize = loopSize;
+    	return this;
+    }
+    
+    public Options withWarmupLoopsize(int loopSize) {
+    	this.warmupLoopsize = loopSize;
+    	return this;
+    }
+
     public ResultWriter getWriter() {
         return resultWriter.get(outputFormat).get();
     }
 
     public StopWatch getStopWatch() {
         return stopWatches.get(measuringUnit).get();
+    }
+    
+    public int getBenchmarkLoopsize() {
+    	return benchmarkLoopsize;
+    }
+    
+    public int getWarmupLoopsize() {
+    	if(warmupLoopsize <= 0) {
+    		return benchmarkLoopsize / 2;
+    	}
+    	return warmupLoopsize;
     }
 }

@@ -8,42 +8,44 @@ import de.gmcs.benchmark.time.StopWatch;
 
 public class Benchmark<T> {
 
-    private static final int LOOPSIZE = 50_000;
-    private static final int WARMUP_LOOPSIZE = LOOPSIZE / 2;
-
     private Options options;
 
     public Benchmark(Options options) {
         this.options = options;
     }
 
-    public void perform(List<Task<T>> tasks) {
+    public void perform(List<TaskGroup<T>> taskGroups) {
         ResultWriter resultWriter = options.getWriter();
 
         resultWriter.printBenchmarkStart();
 
-        performWarmup(resultWriter, tasks);
-        tasks.forEach(t -> performBenchmark(resultWriter, options.getStopWatch(), t));
+        performWarmup(options.getWarmupLoopsize(), resultWriter, taskGroups);
+        taskGroups.forEach(t -> performBenchmark(options.getBenchmarkLoopsize(), resultWriter, options.getStopWatch(), t));
 
         resultWriter.printBenchmarkEnd();
     }
 
-    private void performWarmup(ResultWriter resultWriter, List<Task<T>> tasks) {
+    private void performWarmup(int loopsize, ResultWriter resultWriter, List<TaskGroup<T>> taskGroups) {
         resultWriter.printWarmupStart();
-        for (int i = 0; i < WARMUP_LOOPSIZE; i++) {
-            tasks.forEach(t -> t.execute(t.getData()));
+        for (int i = 0; i < loopsize; i++) {
+        	for(TaskGroup<T> taskGroup : taskGroups) {
+        		taskGroup.getTasks().forEach(t -> t.execute(t.getData()));
+        	}
         }
         resultWriter.printWarmupEnd();
     }
 
-    private void performBenchmark(ResultWriter resultWriter, StopWatch stopWatch, Task<T> task) {
-        resultWriter.printTaskStart(task.getName());
-        T data = task.getData();
-        stopWatch.start();
-        for (int i = 0; i < LOOPSIZE; i++) {
-            task.execute(data);
+    private void performBenchmark(int loopsize, ResultWriter resultWriter, StopWatch stopWatch, TaskGroup<T> taskGroup) {
+    	resultWriter.printTaskGroupStart(taskGroup.getName());
+        for(Task<T> task : taskGroup.getTasks()) {
+        	T data = task.getData();
+        	stopWatch.start();
+	        for (int i = 0; i < loopsize; i++) {
+	        	task.execute(data);
+	        }
+	        long time = stopWatch.end();
+	        resultWriter.printTaskEnd(task.getName(), time);
         }
-        long time = stopWatch.end();
-        resultWriter.printTaskEnd(task.getName(), time);
+        resultWriter.printTaskGroupEnd(taskGroup.getName());
     }
 }

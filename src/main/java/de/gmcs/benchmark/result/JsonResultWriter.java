@@ -18,6 +18,18 @@ public class JsonResultWriter extends AbstractResultWriter {
     @Override
     public void printWarmupEnd() {
     }
+    
+	@Override
+	public void printTaskGroupStart(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void printTaskGroupEnd(String name) {
+		// TODO Auto-generated method stub
+		
+	}
 
     @Override
     public void printTaskStart(String name) {

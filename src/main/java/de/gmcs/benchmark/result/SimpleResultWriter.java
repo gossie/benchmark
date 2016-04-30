@@ -18,6 +18,16 @@ public class SimpleResultWriter extends AbstractResultWriter {
         write("Warmup is finished\n");
     }
 
+	@Override
+	public void printTaskGroupStart(String name) {
+		write("Task group [" + name + "] is running\n");
+	}
+
+	@Override
+	public void printTaskGroupEnd(String name) {
+		write("Task group [" + name + "] is finished\n");
+	}
+
     @Override
     public void printTaskStart(String name) {
         write("Task [" + name + "] is running\n");

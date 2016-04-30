@@ -26,6 +26,8 @@ public class OptionsTest {
     public void setUp() {
         subject = new Options();
         assertThat(subject.getWriter(), is(instanceOf(SimpleResultWriter.class)));
+        assertThat(subject.getBenchmarkLoopsize(), is(50_000));
+        assertThat(subject.getWarmupLoopsize(), is(25_000));
     }
 
     @Test
@@ -60,4 +62,17 @@ public class OptionsTest {
     public void testWithMeasuringUnit_nanoseconds() throws Exception {
         assertThat(subject.withMeasuringUnit(MeasuringUnit.NANOSECONDS).getStopWatch(), is(instanceOf(NanoSecondStopWatch.class)));
     }
+
+	@Test
+	public void testWithBenchmarkLoopsize() throws Exception {
+		subject = subject.withBenchmarkLoopsize(100_000);
+		
+		assertThat(subject.getBenchmarkLoopsize(), is(100_000));
+		assertThat(subject.getWarmupLoopsize(), is(50_000));
+	}
+
+	@Test
+	public void testWithWarmupLoopsize() throws Exception {
+		assertThat(subject.withWarmupLoopsize(75_000).getWarmupLoopsize(), is(75_000));
+	}
 }

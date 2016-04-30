@@ -45,6 +45,30 @@ public class SimpleResultWriterTest {
         subject.printWarmupEnd();
     }
 
+	@Test
+	public void testPrintTaskGroupStart() throws Exception {
+		subject.printTaskGroupStart("task group");
+        verify(writer).write("Task group [task group] is running\n");
+	}
+
+	@Test(expected=RuntimeException.class)
+	public void testPrintTaskGroupStart_ioException() throws Exception {
+		doThrow(IOException.class).when(writer).write("Task group [task group] is running\n");
+		subject.printTaskGroupStart("task group");
+	}
+
+	@Test
+	public void testPrintTaskGroupEnd() throws Exception {
+		subject.printTaskGroupEnd("task group");
+        verify(writer).write("Task group [task group] is finished\n");
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void testPrintTaskGroupEnd_ioException() throws Exception {
+		doThrow(IOException.class).when(writer).write("Task group [task group] is finished\n");
+		subject.printTaskGroupEnd("task group");
+	}
+
     @Test
     public void testPrintTaskStart() throws Exception {
         subject.printTaskStart("task");
