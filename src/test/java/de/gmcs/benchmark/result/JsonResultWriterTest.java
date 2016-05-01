@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class JsonResultWriterTest {
 
     @InjectMocks
@@ -27,12 +26,12 @@ public class JsonResultWriterTest {
     @Test
     public void testPrintBenchmarkStart() throws Exception {
         subject.printBenchmarkStart();
-        verify(writer).write("{\"tasks\":[");
+        verify(writer).write("{\"taskGroups\":[");
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintBenchmarkStart_ioException() throws Exception {
-        doThrow(IOException.class).when(writer).write("{\"tasks\":[");
+        doThrow(IOException.class).when(writer).write("{\"taskGroups\":[");
         subject.printBenchmarkStart();
     }
 
@@ -64,25 +63,27 @@ public class JsonResultWriterTest {
 
 	@Test
 	public void testPrintTaskGroupStart() throws Exception {
-		subject.printTaskGroupStart("task group");
-        verify(writer).write("Task group [task group] is running\n");
+		subject.printTaskGroupStart("task group1");
+		subject.printTaskGroupStart("task group2");
+        verify(writer).write("{\"name\":\"task group1\",\"tasks\":[");
+        verify(writer).write(",{\"name\":\"task group2\",\"tasks\":[");
 	}
 
 	@Test(expected=RuntimeException.class)
 	public void testPrintTaskGroupStart_ioException() throws Exception {
-		doThrow(IOException.class).when(writer).write("Task group [task group] is running\n");
+		doThrow(IOException.class).when(writer).write("{\"name\":\"task group\",\"tasks\":[");
 		subject.printTaskGroupStart("task group");
 	}
 
 	@Test
 	public void testPrintTaskGroupEnd() throws Exception {
 		subject.printTaskGroupEnd("task group");
-        verify(writer).write("Task group [task group] is finished\n");
+        verify(writer).write("]}");
 	}
 	
 	@Test(expected=RuntimeException.class)
 	public void testPrintTaskGroupEnd_ioException() throws Exception {
-		doThrow(IOException.class).when(writer).write("Task group [task group] is finished\n");
+		doThrow(IOException.class).when(writer).write("]}");
 		subject.printTaskGroupEnd("task group");
 	}
 

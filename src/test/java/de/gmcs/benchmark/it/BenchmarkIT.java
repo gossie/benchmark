@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.StringWriter;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,14 +29,14 @@ public class BenchmarkIT {
 
     @Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                { OutputFormat.NONE, MeasuringUnit.MILLISECONDS },
-                { OutputFormat.NONE, MeasuringUnit.NANOSECONDS },
-                { OutputFormat.HTML, MeasuringUnit.MILLISECONDS },
-                { OutputFormat.HTML, MeasuringUnit.NANOSECONDS },
-                { OutputFormat.JSON, MeasuringUnit.MILLISECONDS },
-                { OutputFormat.JSON, MeasuringUnit.NANOSECONDS },
-        });
+    	Collection<Object[]> parameters = new ArrayList<>();
+    	for(OutputFormat outputFormat : OutputFormat.values()) {
+    		for(MeasuringUnit measuringUnit : MeasuringUnit.values()) {
+    			parameters.add(new Object[] {outputFormat, measuringUnit});
+    		}
+    	}
+    	
+        return parameters;
     }
 
     private static int blackHole;

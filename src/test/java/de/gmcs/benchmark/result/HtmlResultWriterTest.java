@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class HtmlResultWriterTest {
 
     @InjectMocks
@@ -27,16 +26,14 @@ public class HtmlResultWriterTest {
     @Test
     public void testPrintBenchmarkStart() throws Exception {
         subject.printBenchmarkStart();
-        String html =
-                "<html>\n<head>\n<title>Benchmark result</title>\n</head>\n<body>\n<table>\n<thead>\n<tr>\n<th>Task</th>\n<th>Time (ms)</th>\n</tr>\n</thead>\n<tbody>\n";
+        String html = "<html>\n<head>\n<title>Benchmark result</title>\n</head>\n<body>\n";
 
         verify(writer).write(html);
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintBenchmarkStart_ioException() throws Exception {
-        String html =
-                "<html>\n<head>\n<title>Benchmark result</title>\n</head>\n<body>\n<table>\n<thead>\n<tr>\n<th>Task</th>\n<th>Time (ms)</th>\n</tr>\n</thead>\n<tbody>\n";
+        String html = "<html>\n<head>\n<title>Benchmark result</title>\n</head>\n<body>\n";
 
         doThrow(IOException.class).when(writer).write(html);
         subject.printBenchmarkStart();
@@ -45,12 +42,12 @@ public class HtmlResultWriterTest {
     @Test
     public void testPrintBenchmarkEnd() throws Exception {
         subject.printBenchmarkEnd();
-        verify(writer).write("</tbody>\n</table>\n</body>\n</html>\n");
+        verify(writer).write("</body>\n</html>\n");
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintBenchmarkEnd_ioException() throws Exception {
-        doThrow(IOException.class).when(writer).write("</tbody>\n</table>\n</body>\n</html>\n");
+        doThrow(IOException.class).when(writer).write("</body>\n</html>\n");
         subject.printBenchmarkEnd();
     }
 
@@ -69,25 +66,25 @@ public class HtmlResultWriterTest {
 	@Test
 	public void testPrintTaskGroupStart() throws Exception {
 		subject.printTaskGroupStart("task group");
-        verify(writer).write("Task group [task group] is running\n");
+        verify(writer).write("<h2>task group</h2>\n<table>\n<thead>\n<tr>\n<th>Task</th>\n<th>Time (ms)</th>\n</tr>\n</thead>\n<tbody>\n");
 	}
 
 	@Test(expected=RuntimeException.class)
 	public void testPrintTaskGroupStart_ioException() throws Exception {
-		doThrow(IOException.class).when(writer).write("Task group [task group] is running\n");
+		doThrow(IOException.class).when(writer).write("<h2>task group</h2>\n<table>\n<thead>\n<tr>\n<th>Task</th>\n<th>Time (ms)</th>\n</tr>\n</thead>\n<tbody>\n");
 		subject.printTaskGroupStart("task group");
 	}
 
 	@Test
 	public void testPrintTaskGroupEnd() throws Exception {
 		subject.printTaskGroupEnd("task group");
-        verify(writer).write("Task group [task group] is finished\n");
+        verify(writer).write("</tbody>\n</table>\n");
 	}
-	
+
 	@Test(expected=RuntimeException.class)
 	public void testPrintTaskGroupEnd_ioException() throws Exception {
-		doThrow(IOException.class).when(writer).write("Task group [task group] is finished\n");
-		subject.printTaskGroupEnd("task group");
+        doThrow(IOException.class).when(writer).write("</tbody>\n</table>\n");
+        subject.printTaskGroupEnd("task group");
 	}
 
     @Test

@@ -20,14 +20,29 @@ public class HtmlResultWriter extends AbstractResultWriter {
 
 	@Override
 	public void printTaskGroupStart(String name) {
-		// TODO Auto-generated method stub
-		
+		String html = new StringBuilder(50)
+				.append("<h2>")
+				.append(name)
+				.append("</h2>").append(LINE_BREAK)
+				.append("<table>").append(LINE_BREAK)
+                .append("<thead>").append(LINE_BREAK)
+                .append("<tr>").append(LINE_BREAK)
+                .append("<th>Task</th>").append(LINE_BREAK)
+                .append("<th>Time (ms)</th>").append(LINE_BREAK)
+                .append("</tr>").append(LINE_BREAK)
+                .append("</thead>").append(LINE_BREAK)
+                .append("<tbody>").append(LINE_BREAK)
+				.toString();
+		write(html);
 	}
 
 	@Override
 	public void printTaskGroupEnd(String name) {
-		// TODO Auto-generated method stub
-		
+		String html = new StringBuilder(50)
+				.append("</tbody>").append(LINE_BREAK)
+				.append("</table>").append(LINE_BREAK)
+				.toString();
+		write(html);
 	}
 
     @Override
@@ -53,14 +68,6 @@ public class HtmlResultWriter extends AbstractResultWriter {
                 .append("<title>Benchmark result</title>").append(LINE_BREAK)
                 .append("</head>").append(LINE_BREAK)
                 .append("<body>").append(LINE_BREAK)
-                .append("<table>").append(LINE_BREAK)
-                .append("<thead>").append(LINE_BREAK)
-                .append("<tr>").append(LINE_BREAK)
-                .append("<th>Task</th>").append(LINE_BREAK)
-                .append("<th>Time (ms)</th>").append(LINE_BREAK)
-                .append("</tr>").append(LINE_BREAK)
-                .append("</thead>").append(LINE_BREAK)
-                .append("<tbody>").append(LINE_BREAK)
                 .toString();
         write(html);
     }
@@ -68,8 +75,6 @@ public class HtmlResultWriter extends AbstractResultWriter {
     @Override
     public void printBenchmarkEnd() {
         String html = new StringBuilder(25)
-                .append("</tbody>").append(LINE_BREAK)
-                .append("</table>").append(LINE_BREAK)
                 .append("</body>").append(LINE_BREAK)
                 .append("</html>").append(LINE_BREAK)
                 .toString();
