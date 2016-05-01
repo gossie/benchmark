@@ -43,7 +43,7 @@ public class Benchmark<T> {
 	        for (int i = 0; i < loopsize; i++) {
 	        	task.execute(data);
 	        }
-	        long time = stopWatch.end();
+	        String time = stopWatch.end();
 	        resultWriter.printTaskEnd(task.getName(), time);
         }
         resultWriter.printTaskGroupEnd(taskGroup.getName());

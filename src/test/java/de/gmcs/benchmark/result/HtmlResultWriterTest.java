@@ -95,13 +95,13 @@ public class HtmlResultWriterTest {
 
     @Test
     public void testPrintTaskEnd() throws Exception {
-        subject.printTaskEnd("task", 350L);
-        verify(writer).write("<tr>\n<td>task</td>\n<td>350</td>\n</tr>\n");
+        subject.printTaskEnd("task", "350ms");
+        verify(writer).write("<tr>\n<td>task</td>\n<td>350ms</td>\n</tr>\n");
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintTaskEnd_ioException() throws Exception {
-        doThrow(IOException.class).when(writer).write("<tr>\n<td>task</td>\n<td>350</td>\n</tr>\n");
-        subject.printTaskEnd("task", 350L);
+        doThrow(IOException.class).when(writer).write("<tr>\n<td>task</td>\n<td>350ms</td>\n</tr>\n");
+        subject.printTaskEnd("task", "350ms");
     }
 }

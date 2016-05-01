@@ -50,7 +50,7 @@ public class HtmlResultWriter extends AbstractResultWriter {
     }
 
     @Override
-    public void printTaskEnd(String name, long time) {
+    public void printTaskEnd(String name, String time) {
         String html = new StringBuilder(50)
                 .append("<tr>").append(LINE_BREAK)
                 .append("<td>").append(name).append("</td>").append(LINE_BREAK)

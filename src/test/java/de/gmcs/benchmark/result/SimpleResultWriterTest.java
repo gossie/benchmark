@@ -83,14 +83,14 @@ public class SimpleResultWriterTest {
 
     @Test
     public void testPrintTaskEnd() throws Exception {
-        subject.printTaskEnd("task", 350);
+        subject.printTaskEnd("task", "350ms");
         verify(writer).write("Task [task] is finished: 350ms\n");
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintTaskEnd_ioException() throws Exception {
         doThrow(IOException.class).when(writer).write("Task [task] is finished: 350ms\n");
-        subject.printTaskEnd("task", 350);
+        subject.printTaskEnd("task", "350ms");
     }
 
     @Test

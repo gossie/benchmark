@@ -6,4 +6,9 @@ public class NanoSecondStopWatch extends AbstractStopWatch {
     protected long getTime() {
         return System.nanoTime();
     }
+    
+    @Override
+    protected String getUnit() {
+    	return "ns";
+    }
 }

@@ -4,5 +4,5 @@ public interface StopWatch {
 
     void start();
 
-    long end();
+    String end();
 }

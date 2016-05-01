@@ -1,7 +1,6 @@
 package de.gmcs.benchmark.time;
 
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -19,7 +18,7 @@ public class MilliSecondStopWatchTest {
     @Test
     public void testEnd() throws Exception {
         subject.start();
-        assertThat(subject.end(), is(greaterThanOrEqualTo(0L)));
+        assertThat(subject.end(), endsWith(" ms"));
     }
 
     @Test(expected = IllegalStateException.class)

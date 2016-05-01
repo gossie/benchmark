@@ -6,4 +6,9 @@ public class MilliSecondStopWatch extends AbstractStopWatch {
     protected long getTime() {
         return System.currentTimeMillis();
     }
+    
+    @Override
+    protected String getUnit() {
+    	return "ms";
+    }
 }

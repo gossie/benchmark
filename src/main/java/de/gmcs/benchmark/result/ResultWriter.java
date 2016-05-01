@@ -12,7 +12,7 @@ public interface ResultWriter {
 
     void printTaskStart(String name);
 
-    void printTaskEnd(String name, long time);
+    void printTaskEnd(String name, String time);
 
     void printBenchmarkStart();
 

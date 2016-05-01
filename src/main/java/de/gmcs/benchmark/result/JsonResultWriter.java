@@ -41,11 +41,11 @@ public class JsonResultWriter extends AbstractResultWriter {
     }
 
     @Override
-    public void printTaskEnd(String name, long time) {
+    public void printTaskEnd(String name, String time) {
         if (printTaskSeparator) {
-            write(",{\"name\":\"" + name + "\",\"time\":" + time + "}");
+            write(",{\"name\":\"" + name + "\",\"time\":\"" + time + "\"}");
         } else {
-            write("{\"name\":\"" + name + "\",\"time\":" + time + "}");
+            write("{\"name\":\"" + name + "\",\"time\":\"" + time + "\"}");
         }
         printTaskSeparator = true;
     }

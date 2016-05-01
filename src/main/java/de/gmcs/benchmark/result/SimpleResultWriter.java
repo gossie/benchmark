@@ -34,8 +34,8 @@ public class SimpleResultWriter extends AbstractResultWriter {
     }
 
     @Override
-    public void printTaskEnd(String name, long time) {
-        write("Task [" + name + "] is finished: " + time + "ms\n");
+    public void printTaskEnd(String name, String time) {
+        write("Task [" + name + "] is finished: " + time + "\n");
     }
 
     @Override

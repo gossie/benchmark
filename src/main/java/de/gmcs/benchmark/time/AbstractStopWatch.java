@@ -10,12 +10,14 @@ public abstract class AbstractStopWatch implements StopWatch {
     }
 
     @Override
-    public long end() {
+    public String end() {
         if (start == 0) {
             throw new IllegalStateException("start() was not called");
         }
-        return getTime() - start;
+        return (getTime() - start) + " " + getUnit();
     }
 
     protected abstract long getTime();
+    
+    protected abstract String getUnit();
 }

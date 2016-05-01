@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -95,15 +94,15 @@ public class JsonResultWriterTest {
 
     @Test
     public void testPrintTaskEnd() throws Exception {
-        subject.printTaskEnd("task1", 351L);
-        subject.printTaskEnd("task2", 352L);
-        verify(writer).write("{\"name\":\"task1\",\"time\":351}");
-        verify(writer).write(",{\"name\":\"task2\",\"time\":352}");
+        subject.printTaskEnd("task1", "351ms");
+        subject.printTaskEnd("task2", "352ms");
+        verify(writer).write("{\"name\":\"task1\",\"time\":\"351ms\"}");
+        verify(writer).write(",{\"name\":\"task2\",\"time\":\"352ms\"}");
     }
 
     @Test(expected = RuntimeException.class)
     public void testPrintTaskEnd_ioException() throws Exception {
-        doThrow(IOException.class).when(writer).write("{\"name\":\"task\",\"time\":350}");
-        subject.printTaskEnd("task", 350L);
+        doThrow(IOException.class).when(writer).write("{\"name\":\"task\",\"time\":\"350ms\"}");
+        subject.printTaskEnd("task", "350ms");
     }
 }
