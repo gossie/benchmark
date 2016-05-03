@@ -1,6 +1,8 @@
 package de.gmcs.benchmark;
 
 import static java.util.Arrays.asList;
+
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -8,12 +10,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import de.gmcs.benchmark.options.Options;
 import de.gmcs.benchmark.result.SimpleResultWriter;
 import de.gmcs.benchmark.time.MilliSecondStopWatch;
+import org.junit.Before;
+import org.junit.Test;
 
 public class BenchmarkTest {
 
@@ -36,16 +37,14 @@ public class BenchmarkTest {
         Object data2 = new Object();
         Object data3 = new Object();
         Object data4 = new Object();
-        
 
         Task<Object> task1 = createTask("task1", data1);
         Task<Object> task2 = createTask("task2", data2);
         Task<Object> task3 = createTask("task3", data3);
         Task<Object> task4 = createTask("task4", data4);
-        
+
         TaskGroup<Object> taskGroup1 = createTaskGroup("group1", asList(task1, task2));
         TaskGroup<Object> taskGroup2 = createTaskGroup("group2", asList(task3, task4));
-
 
         subject.perform(asList(taskGroup1, taskGroup2));
 
@@ -54,13 +53,13 @@ public class BenchmarkTest {
         verify(task3, times(150)).execute(data3);
         verify(task4, times(150)).execute(data4);
     }
-    
+
     @SuppressWarnings("unchecked")
     private TaskGroup<Object> createTaskGroup(String name, List<Task<Object>> tasks) {
-    	TaskGroup<Object> taskGroup = mock(TaskGroup.class);
+        TaskGroup<Object> taskGroup = mock(TaskGroup.class);
         when(taskGroup.getName()).thenReturn(name);
         when(taskGroup.getTasks()).thenReturn(tasks);
-        
+
         return taskGroup;
     }
 
@@ -68,7 +67,8 @@ public class BenchmarkTest {
     private Task<Object> createTask(String name, Object data) {
         Task<Object> task = mock(Task.class);
         when(task.getName()).thenReturn(name);
-        when(task.getData()).thenReturn(data);
+        when(task.getWarmupData(anyInt())).thenReturn(data);
+        when(task.getBenchmarkData(anyInt())).thenReturn(data);
 
         return task;
     }

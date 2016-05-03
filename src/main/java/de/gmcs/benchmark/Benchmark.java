@@ -32,8 +32,9 @@ public class Benchmark<T> {
     private void performWarmup(int loopsize, ResultWriter resultWriter, List<TaskGroup<T>> taskGroups) {
         resultWriter.printWarmupStart();
         for (int i = 0; i < loopsize; i++) {
+            final int loopIndex = i;
             for (TaskGroup<T> taskGroup : taskGroups) {
-                taskGroup.getTasks().forEach(t -> t.execute(t.getData()));
+                taskGroup.getTasks().forEach(t -> t.execute(t.getWarmupData(loopIndex)));
             }
         }
         resultWriter.printWarmupEnd();
@@ -43,17 +44,17 @@ public class Benchmark<T> {
         String taskGroupName = taskGroup.getName();
 
         resultWriter.printTaskGroupStart(taskGroupName);
-        taskGroup.getTasks().stream().forEach(t -> performTask(loopsize, resultWriter, stopWatch, t, t.getData()));
+        taskGroup.getTasks().stream().forEach(t -> performTask(loopsize, resultWriter, stopWatch, t));
         resultWriter.printTaskGroupEnd(taskGroupName);
     }
 
-    private void performTask(int loopsize, ResultWriter resultWriter, StopWatch stopWatch, Task<T> task, T data) {
+    private void performTask(int loopsize, ResultWriter resultWriter, StopWatch stopWatch, Task<T> task) {
         String taskName = task.getName();
 
         resultWriter.printTaskStart(taskName);
         stopWatch.start();
         for (int i = 0; i < loopsize; i++) {
-            task.execute(data);
+            task.execute(task.getBenchmarkData(i));
         }
         String time = stopWatch.end();
         resultWriter.printTaskEnd(taskName, time);

@@ -92,13 +92,13 @@ public class BenchmarkIT {
     }
 
     private Task<Integer> createTask(String name, Integer number, ShiftMultiplier shiftMultiplier) {
-        return new Task<Integer>(name, () -> number, i -> {
+        return new Task<Integer>(name, i -> number, i -> number, i -> {
             blackHole = shiftMultiplier.timesTwo(i);
         });
     }
 
     private Task<Integer> createTask(String name, Integer number, MultiplyMultiplier multiplyMultiplier) {
-        return new Task<Integer>(name, () -> number, i -> {
+        return new Task<Integer>(name, i -> number, i -> number, i -> {
             blackHole = multiplyMultiplier.timesTwo(i);
         });
     }
