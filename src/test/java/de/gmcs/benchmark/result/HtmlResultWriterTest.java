@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
