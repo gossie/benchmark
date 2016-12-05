@@ -1,3 +1,4 @@
+#Ignore maven target directory
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -7,3 +8,17 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+
+#Ignore eclipse
+/.project
+/.settings
+/.classpath
+
+#Ignore netbeans
+/nb-configuration.xml
+/nbactions.xml
+.checkstyle
+
+#Ignore IntelliJ
+.idea
+*.iml

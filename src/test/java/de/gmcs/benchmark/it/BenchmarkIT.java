@@ -1,6 +1,7 @@
 package de.gmcs.benchmark.it;
 
 import static java.util.Arrays.asList;
+
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -10,12 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.hamcrest.Matcher;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
 import de.gmcs.benchmark.Benchmark;
 import de.gmcs.benchmark.Task;
 import de.gmcs.benchmark.TaskGroup;
@@ -23,19 +18,24 @@ import de.gmcs.benchmark.it.matcher.BenchmarkMatchers;
 import de.gmcs.benchmark.options.MeasuringUnit;
 import de.gmcs.benchmark.options.Options;
 import de.gmcs.benchmark.options.OutputFormat;
+import org.hamcrest.Matcher;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class BenchmarkIT {
 
     @Parameters
     public static Collection<Object[]> data() {
-    	Collection<Object[]> parameters = new ArrayList<>();
-    	for(OutputFormat outputFormat : OutputFormat.values()) {
-    		for(MeasuringUnit measuringUnit : MeasuringUnit.values()) {
-    			parameters.add(new Object[] {outputFormat, measuringUnit});
-    		}
-    	}
-    	
+        Collection<Object[]> parameters = new ArrayList<>();
+        for (OutputFormat outputFormat : OutputFormat.values()) {
+            for (MeasuringUnit measuringUnit : MeasuringUnit.values()) {
+                parameters.add(new Object[] { outputFormat, measuringUnit });
+            }
+        }
+
         return parameters;
     }
 
@@ -61,11 +61,11 @@ public class BenchmarkIT {
         Task<Integer> task1 = createTask("multiply 1", 1, multiplyMultiplier);
         Task<Integer> task2 = createTask("shift 1", 1, shiftMultiplier);
         TaskGroup<Integer> taskGroup1 = createTaskGroup("group1", asList(task1, task2));
-        
+
         Task<Integer> task3 = createTask("multiply 1000000", 1_000_000, multiplyMultiplier);
         Task<Integer> task4 = createTask("shift 1000000", 1_000_000, shiftMultiplier);
         TaskGroup<Integer> taskGroup2 = createTaskGroup("group2", asList(task3, task4));
-        
+
         Task<Integer> task5 = createTask("multiply 1000000000", 1_000_000_000, multiplyMultiplier);
         Task<Integer> task6 = createTask("shift 1000000000", 1_000_000_000, shiftMultiplier);
         TaskGroup<Integer> taskGroup3 = createTaskGroup("group3", asList(task5, task6));
@@ -78,27 +78,27 @@ public class BenchmarkIT {
 
     private Matcher<String> getMatcher(OutputFormat outputFormat) {
         switch (outputFormat) {
-	        case HTML:
-	            return BenchmarkMatchers.validHtml();
-	        case JSON:
-	            return BenchmarkMatchers.validJson();
-	        default:
-	            return BenchmarkMatchers.validOutput();
+            case HTML:
+                return BenchmarkMatchers.validHtml();
+            case JSON:
+                return BenchmarkMatchers.validJson();
+            default:
+                return BenchmarkMatchers.validOutput();
         }
     }
-    
+
     private TaskGroup<Integer> createTaskGroup(String name, List<Task<Integer>> tasks) {
-    	return new TaskGroup<Integer>(name, tasks);
+        return new TaskGroup<Integer>(name, tasks);
     }
 
     private Task<Integer> createTask(String name, Integer number, ShiftMultiplier shiftMultiplier) {
-        return new Task<Integer>(name, () -> number, i -> {
+        return new Task<Integer>(name, i -> number, i -> number, i -> {
             blackHole = shiftMultiplier.timesTwo(i);
         });
     }
 
     private Task<Integer> createTask(String name, Integer number, MultiplyMultiplier multiplyMultiplier) {
-        return new Task<Integer>(name, () -> number, i -> {
+        return new Task<Integer>(name, i -> number, i -> number, i -> {
             blackHole = multiplyMultiplier.timesTwo(i);
         });
     }

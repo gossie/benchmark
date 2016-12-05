@@ -20,32 +20,43 @@ public class Benchmark<T> {
         resultWriter.printBenchmarkStart();
 
         performWarmup(options.getWarmupLoopsize(), resultWriter, taskGroups);
-        taskGroups.forEach(t -> performBenchmark(options.getBenchmarkLoopsize(), resultWriter, options.getStopWatch(), t));
+        performBenchmark(options.getBenchmarkLoopsize(), taskGroups, resultWriter, options.getStopWatch());
 
         resultWriter.printBenchmarkEnd();
+    }
+
+    private void performBenchmark(int loopsize, List<TaskGroup<T>> taskGroups, ResultWriter resultWriter, StopWatch stopWatch) {
+        taskGroups.forEach(t -> performTaskGroup(loopsize, resultWriter, stopWatch, t));
     }
 
     private void performWarmup(int loopsize, ResultWriter resultWriter, List<TaskGroup<T>> taskGroups) {
         resultWriter.printWarmupStart();
         for (int i = 0; i < loopsize; i++) {
-        	for(TaskGroup<T> taskGroup : taskGroups) {
-        		taskGroup.getTasks().forEach(t -> t.execute(t.getData()));
-        	}
+            final int loopIndex = i;
+            for (TaskGroup<T> taskGroup : taskGroups) {
+                taskGroup.getTasks().forEach(t -> t.execute(t.getWarmupData(loopIndex)));
+            }
         }
         resultWriter.printWarmupEnd();
     }
 
-    private void performBenchmark(int loopsize, ResultWriter resultWriter, StopWatch stopWatch, TaskGroup<T> taskGroup) {
-    	resultWriter.printTaskGroupStart(taskGroup.getName());
-        for(Task<T> task : taskGroup.getTasks()) {
-        	T data = task.getData();
-        	stopWatch.start();
-	        for (int i = 0; i < loopsize; i++) {
-	        	task.execute(data);
-	        }
-	        String time = stopWatch.end();
-	        resultWriter.printTaskEnd(task.getName(), time);
+    private void performTaskGroup(int loopsize, ResultWriter resultWriter, StopWatch stopWatch, TaskGroup<T> taskGroup) {
+        String taskGroupName = taskGroup.getName();
+
+        resultWriter.printTaskGroupStart(taskGroupName);
+        taskGroup.getTasks().stream().forEach(t -> performTask(loopsize, resultWriter, stopWatch, t));
+        resultWriter.printTaskGroupEnd(taskGroupName);
+    }
+
+    private void performTask(int loopsize, ResultWriter resultWriter, StopWatch stopWatch, Task<T> task) {
+        String taskName = task.getName();
+
+        resultWriter.printTaskStart(taskName);
+        stopWatch.start();
+        for (int i = 0; i < loopsize; i++) {
+            task.execute(task.getBenchmarkData(i));
         }
-        resultWriter.printTaskGroupEnd(taskGroup.getName());
+        String time = stopWatch.end();
+        resultWriter.printTaskEnd(taskName, time);
     }
 }
